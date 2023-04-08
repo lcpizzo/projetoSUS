@@ -15,6 +15,6 @@ const medicamentoSchema = new mongoose.Schema({
     }
 })
 
-const medicamento = mongoose.model("User", medicamentoSchema);
+const medicamento = mongoose.model("Medicamento", medicamentoSchema);
 
 export default medicamento;
