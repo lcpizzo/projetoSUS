@@ -8,8 +8,7 @@ const pedidoSchema = new mongoose.Schema({
     },
     postoDestino: {
         type: mongoose.Schema.Types.ObjectId,
-        // TODO: modificar a referência quando o schema de posto for criado
-        ref: 'posto',
+        ref: 'Posto',
         required: true,
     },
     medicamento:{
@@ -17,7 +16,7 @@ const pedidoSchema = new mongoose.Schema({
     },
     farmaceutico:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'funcionario',
+        ref: 'Funcionario',
     }
 })
 

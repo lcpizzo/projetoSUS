@@ -1,18 +1,5 @@
 import mongoose from "mongoose";
 
-const estoqueModel = new mongoose.Schema({
-    medicamento: {
-        type: mongoose.Schema.Types.ObjectID,
-        ref: 'medicamento'
-    },
-    quantidadeEstoque: {
-        type: Int32Array,
-    },
-    precoAtual: {
-        type: Float64Array
-    }
-})
-
 const postoSchema = new mongoose.Schema({
     codigoPosto: {
         type: String,
@@ -30,15 +17,25 @@ const postoSchema = new mongoose.Schema({
     CEP: {
         type: String,
         required: true,
-        match: '/^([\d]{2})\.*([\d]{3})-*([\d]{3})/',
+        //match: '/^([\d]{2})\.?([\d]{3})-?([\d]{3})/',
     },
     estoque: {
-        type: [estoqueModel],
-        default: () => ({})
+        type: {
+            medicamento: {
+                type: mongoose.Schema.Types.ObjectID,
+                ref: 'Medicamento',
+            },
+            quantidadeEstoque: {
+                type: Number,
+            },
+            precoAtual: {
+                type: Number,
+            }        
+        }
     },
     funcionarios: {
         type: [mongoose.Schema.Types.ObjectId],
-        ref: 'funcionario'
+        ref: 'Funcionario'
     }
 
 })

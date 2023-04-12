@@ -1,30 +1,27 @@
 import mongoose from "mongoose";
 
-const receituarioModel = new mongoose.Schema({
-    medicamento: {
-        type: mongoose.Schema.Types.ObjectID,
-        ref: 'medicamento',
-        required:true
-    },
-    frequencia: {
-        type: Int32Array,
-        required:true,
-    },
-    dose: {
-        type: String,
-        required:true,
-    }
-})
-
 const receitaSchema = new mongoose.Schema({
     cod_receita:{
         type:String,
         required: true,
-        index:true,
+        unique:true,
     },
     receituario:{
-        type: [receituarioModel],
-        default: () => ({})
+        type: {
+            medicamento: {
+                type: mongoose.Schema.Types.ObjectID,
+                ref: 'Medicamento',
+                required:true,
+            },
+            frequencia: {
+                type: String,
+                required:true,
+            },
+            dose: {
+                type: String,
+                required:true,
+            }
+        }
     },
     validade:{
         type: Date,
@@ -32,12 +29,12 @@ const receitaSchema = new mongoose.Schema({
     },
     medico:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'funcionario',
+        ref: 'Funcionario',
         required: true,
     },
     paciente:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'paciente',
+        ref: 'Paciente',
         required: true,
     }
 })

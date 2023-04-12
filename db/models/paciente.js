@@ -6,7 +6,7 @@ const pacienteSchema = new mongoose.Schema({
     required: true,
     trim: true,
     unique: true,
-    match: '/([0-9]{3}.?[0-9]{3}.?[0-9]{3}.?-?[0-9]{2})/',
+    //match: '/([0-9]{3}.?[0-9]{3}.?[0-9]{3}.?-?[0-9]{2})/',
   },
   nome: {
     type: String,
@@ -15,6 +15,8 @@ const pacienteSchema = new mongoose.Schema({
   },
   endereco: {
     type: String,
+    required: true,
+    trim: true,
   },
   convenioMedico: {
     type: String,
@@ -22,7 +24,8 @@ const pacienteSchema = new mongoose.Schema({
     trim: true,
   },
   idade: {
-    type: Int32Array,
+    type: Number,
+    required: true,
   },
 });
 
