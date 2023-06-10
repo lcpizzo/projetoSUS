@@ -19,7 +19,7 @@ const codigoAgregadoModel = new mongoose.Schema({
 
 const consultaSchema = new mongoose.Schema({
   codigo: {
-    type: [codigoAgregadoModel],
+    type: codigoAgregadoModel,
     required: true,
     trim: true,
     unique: true,
