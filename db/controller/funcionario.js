@@ -1,4 +1,5 @@
 const { MongoClient } = require('mongodb');
+const { default: funcionario } = require('../models/funcionario');
 
 try {
   await client.connect();
@@ -31,59 +32,55 @@ async function createMultipleListings(client, newFuncionarios) {
 }
 
 // retorna funcionario conforme busca por seu CRM
-async function findOneByCRM(client, nameOfListing) {
-  // See https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#findOne for the findOne() docs
-  const result = await client
-    .db('sample_airbnb')
-    .collection('listingsAndReviews')
-    .findOne({ name: nameOfListing });
+async function findOneByCRM(client, crm) {
+  const result = await client.db('test').collection('funcionarios').find({
+    codigoRegional: crm,
+  });
 
   if (result) {
-    console.log(`Found a listing in the collection with the name '${nameOfListing}':`);
+    console.log(`Found a listing in the collection with the CRM code '${crm}':`);
     console.log(result);
   } else {
-    console.log(`No listings found with the name '${nameOfListing}'`);
+    console.log(`No listings found with the CRM code '${crm}'`);
   }
 }
 
 // retorna funcionarios conforme busca de estado do pais
-async function findByState(
-  client,
-  {
-    minimumNumberOfBedrooms = 0,
-    minimumNumberOfBathrooms = 0,
-    maximumNumberOfResults = Number.MAX_SAFE_INTEGER,
-  } = {}
-) {
-  const cursor = client
-    .db('test')
-    .collection('funcionarios')
-    .find({
-      bedrooms: { $gte: minimumNumberOfBedrooms },
-      bathrooms: { $gte: minimumNumberOfBathrooms },
-    })
-    .sort({ last_review: -1 })
-    .limit(maximumNumberOfResults);
+async function findEmployeeByState(client, uf) {
+  const result = await client.db('test').collection('funcionarios').find({
+    uf: uf,
+  });
 
-  // Store the results in an array
-  const results = await cursor.toArray();
-
-  // // Print the results
-  // if (results.length > 0) {
-  //     console.log(`Found listing(s) with at least ${minimumNumberOfBedrooms} bedrooms and ${minimumNumberOfBathrooms} bathrooms:`);
-  //     results.forEach((result, i) => {
-  //         const date = new Date(result.last_review).toDateString();
-
-  //         console.log();
-  //         console.log(`${i + 1}. name: ${result.name}`);
-  //         console.log(`   _id: ${result._id}`);
-  //         console.log(`   bedrooms: ${result.bedrooms}`);
-  //         console.log(`   bathrooms: ${result.bathrooms}`);
-  //         console.log(`   most recent review date: ${date}`);
-  //     });
-  // } else {
-  //     console.log(`No listings found with at least ${minimumNumberOfBedrooms} bedrooms and ${minimumNumberOfBathrooms} bathrooms`);
-  // }
+  if (result) {
+    console.log(`Found an employee in the collection with the state ('${uf}'):`);
+    console.log(result);
+  } else {
+    console.log(`No employee found with the state ('${uf}')`);
+  }
 }
 
-//
+// atualiza funcionario conforme seu CRM
+async function updateEmployeeInformations(client, crm, newEmployee) {
+  const result = await client.db('test').collection('funcionarios').updateOne(
+    {
+      codigoRegional: crm,
+    },
+    { $set: newEmployee }
+  );
+
+  if (result) {
+    console.log(`${result} updated.`);
+  } else {
+    console.error(`No employee with the CRM code ${crm} found.`);
+  }
+}
+
+// deleta funcionario conforme seu CRM
+async function deleteEmployee(client, crm) {
+  const result = await client
+    .db('test')
+    .collection('funcionarios')
+    .deleteOne({ codigoRegional: crm });
+
+  console.log(`${result} deleted`);
+}
