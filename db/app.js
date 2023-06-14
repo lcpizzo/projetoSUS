@@ -1,23 +1,26 @@
 import db from './dbConnect.js';
 import medicamento from './models/medicamento.js';
 
+const app = express();
+
 const port = process.env.PORT || 3000;
 
-db.on("error", console.log.bind(console, "Erro de conexão"));
-db.once("open", () => {
-  console.log("Conexão com o banco feita com sucesso");
+db.on('error', console.log.bind(console, 'Erro de conexão'));
+db.once('open', () => {
+  console.log('Conexão com o banco feita com sucesso');
 });
 
-/*const input = {
-  nome:'alguma coisa',
-  codigo:'codigo1',
-}
+const Consulta = require('./models/consulta.js');
+const Funcionario = require('./models/funcionario.js');
+const Medicamento = require('./models/medicamento.js');
+const Paciente = require('./models/paciente.js');
+const Pedido = require('./models/pedido.js');
+const Posto = require('./models/posto.js');
+const Receita = require('./models/receita.js');
 
-const med = new medicamento(input);
+const consultaRoute = require('./routes/consulta-route.js');
 
-await med.save();
-*/
+app.use('/', indexRoute);
+app.use('/constulta', consultaRoute);
 
-const med = await medicamento.find();
-
-console.log(med);
+module.exports = app;

@@ -1,38 +1,49 @@
 const { MongoClient } = require('mongodb');
+const Consulta = mongoose.model('Consulta');
 
-try {
-  await client.connect();
-  await createMultipleAppointments(client, [
-    {
-      codigo: {
-        medico: 'muzzy',
-        paciente: 'jorgin',
-        dataConsulta: '10/06/2023',
-      },
-      dadosReceita: ['trembo 1.5mg por semana', 'deca 0.5mg por semana'],
-    },
-    {
+// cria uma consulta POST
+exports.post = async (req, res, next) => {
+  try {
+    let consulta = new Consulta({
       codigo: {
         medico: 'pazuelo',
         paciente: 'jun',
         dataConsulta: '11/06/2023',
       },
       dadosReceita: ['cloroquina', 'ivermectina'],
-    },
-  ]);
-} catch (e) {
-  console.error(e);
-}
+    });
+    await consulta.save();
+    res.status(201).send({
+      message: 'Consulta cadastrado com sucesso!',
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).send({
+      message: 'Falha ao processar requisição',
+      data: e,
+    });
+  }
+};
 
 // cria multiplos objetos consulta
-async function createMultipleAppointments(client, newAppointments) {
-  const result = await client.db('test').collection('consultas').insertMany(newAppointments);
+// async function createMultipleAppointments(client, newAppointments) {
+//   let consulta = new Consulta({
+//     codigo: {
+//       medico: 'pazuelo',
+//       paciente: 'jun',
+//       dataConsulta: '11/06/2023',
+//     },
+//     dadosReceita: ['cloroquina', 'ivermectina'],
+//   });
+//   await consulta.save();
 
-  console.log(`${result.insertedCount} new appointments(s) created with the following id(s):`);
-  console.log(result.insertedIds);
-}
+//   // const result = await client.db('test').collection('consultas').insertMany(newAppointments);
 
-// retorna consulta buscada pela tupla (medico, paciente, data)
+//   // console.log(`${result.insertedCount} new appointments(s) created with the following id(s):`);
+//   // console.log(result.insertedIds);
+// }
+
+// retorna consulta buscada pela tupla (medico, paciente, data) - isso vai ser mudado para a funcao abaixo getByTuple
 async function findOneAppointmentByTuple(client, { doctor, patient, date } = {}) {
   const result = await client.db('test').collection('consultas').findOne({
     'codigo.medico': doctor,
@@ -50,31 +61,61 @@ async function findOneAppointmentByTuple(client, { doctor, patient, date } = {})
   }
 }
 
-// retorna todas as consultas de um determinado paciente
-async function findByPatient(client, patient) {
-  const cursor = client.db('test').collection('consultas').find({
-    'codigo.paciente': patient,
-  });
-
-  // Store the results in an array
-  const results = await cursor.toArray();
-
-  // Print the results
-  if (results.length > 0) {
-    console.log(`Found appointment(s) with patient ${patient}:`);
-    results.forEach((result, i) => {
-      const date = new Date(result.codigo.dataConsulta).toDateString();
-
-      console.log();
-      console.log(`${i + 1}. medico: ${result.codigo.medico}`);
-      console.log(`   _id: ${result._id}`);
-      console.log(`   paciente: ${result.codigo.paciente}`);
-      console.log(`   data: ${date}`);
+// retorna consulta buscada pela tupla (medico, paciente, data)
+exports.getByTuple = async (req, res, next) => {
+  try {
+    const data = await Consulta.find({
+      'codigo.medico': doctor,
+      'codigo.paciente': patient,
+      'codigo.dataConsulta': date,
     });
-  } else {
-    console.log(`No appointments found with patient ${patient}:`);
+    res.status(200).send(data);
+  } catch (e) {
+    res.status(500).send({
+      message: 'Falha ao processar requisição',
+    });
   }
-}
+};
+
+// retorna todas as consultas de um determinado paciente
+exports.getByPatient = async (req, res, next) => {
+  try {
+    const data = await Consulta.find({
+      'codigo.paciente': patient,
+    });
+    res.status(200).send(data);
+  } catch (e) {
+    res.status(500).send({
+      message: 'Falha ao processar requisição',
+    });
+  }
+};
+
+// // retorna todas as consultas de um determinado paciente
+// async function findByPatient(client, patient) {
+//   const cursor = client.db('test').collection('consultas').find({
+//     'codigo.paciente': patient,
+//   });
+
+//   // Store the results in an array
+//   const results = await cursor.toArray();
+
+//   // Print the results
+//   if (results.length > 0) {
+//     console.log(`Found appointment(s) with patient ${patient}:`);
+//     results.forEach((result, i) => {
+//       const date = new Date(result.codigo.dataConsulta).toDateString();
+
+//       console.log();
+//       console.log(`${i + 1}. medico: ${result.codigo.medico}`);
+//       console.log(`   _id: ${result._id}`);
+//       console.log(`   paciente: ${result.codigo.paciente}`);
+//       console.log(`   data: ${date}`);
+//     });
+//   } else {
+//     console.log(`No appointments found with patient ${patient}:`);
+//   }
+// }
 
 //atualizar uma determinada consulta
 async function updateAppointmentByTuple(client, { doctor, patient, date } = {}, newAppointment) {
