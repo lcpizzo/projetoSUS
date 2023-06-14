@@ -1,8 +1,8 @@
 const { MongoClient } = require('mongodb');
-const { default: medicamento } = require('../models/medicamento');
-const Receita = mongoose.model('Receita');
+// const { default: medicamento } = require('../models/medicamento');
+const Receita = mongoose.model('receitas');
 
-// cria uma consulta post
+// cria uma receita post
 exports.post =async (req, res, next) => {
   try {
     let receita = new Receita({
@@ -70,23 +70,18 @@ exports.post =async (req, res, next) => {
 // }
 
 // retorna consulta buscada pelo codigo da receita
-async function findOnePrescriptionByCod(client, cod_receita_alvo) {
-  const result = await client.db('test').collection('receitas').findOne({
+async function findOnePrescriptionByCod(cod_receita_alvo) {
+  const result = await Receita.findOne({
     cod_receita: cod_receita_alvo,
   });
 
-  if (result) {
-    console.log(`Found a prescription in the collection with the cod ${cod_receita_alvo}:`);
-    console.log(result);
-  } else {
-    console.log(`No prescription found with the cod ${cod_receita_alvo}:`);
-  }
+  return result;
 }
 
 exports.getByCod = async (req, res, next) => {
   try {
     const data = await this.findOnePrescriptionByCod({
-      req.params.cod_receita_alvo
+      cod_receita_alvo: req.params.cod_receita_alvo
     });
     res.status(200).send(data);
   } catch (e) {
@@ -98,41 +93,19 @@ exports.getByCod = async (req, res, next) => {
 
 
 // retorna todas as receitas de um determinado paciente
-async function findByPatient(client, patient) {
-  const cursor = client.db('test').collection('receitas').find({
+async function findByPatient(patient) {
+  const cursor = Receita.find({
     paciente: patient,
   });
 
   // Store the results in an array
-  const results = await cursor.toArray();
-
-  // Print the results
-  if (results.length > 0) {
-    console.log(`Found prescription(s) with patient ${patient}:`);
-    results.forEach((result, i) => {
-      const validade = new Date(result.validade).toDateString();
-
-      console.log();
-      console.log(`${i + 1}. medico: ${result.medico}`);
-      console.log(`   _id: ${result._id}`);
-      console.log(`   paciente: ${result.paciente}`);
-      console.log(`   validade: ${validade}`);
-      console.log(`   receituario:`);
-      results.receituario.forEach((medicamento, id) => {
-        console.log(`      medicamento: ${medicamento.medicamento.nome}`);
-        console.log(`      frequencia: ${medicamento.frequencia}`);
-        console.log(`      dose: ${medicamento.dose}`);
-      });
-    });
-  } else {
-    console.log(`No prescriptions found with patient ${patient}:`);
-  }
+  return result;
 }
 
 exports.getByPatient = async (req, res, next) => {
   try {
     const data = await this.findByPatient({
-      req.params.patient
+      patient:req.params.patient
     });
     res.status(200).send(data);
   } catch (e) {
@@ -144,27 +117,20 @@ exports.getByPatient = async (req, res, next) => {
 
 
 //atualizar uma determinada consulta
-async function updateAppointmentByCod(client, cod_receita_alvo, newPrescription) {
-  const result = await client.db('test').collection('consultas').updateOne(
+async function updateAppointmentByCod(cod_receita_alvo, newPrescription) {
+  const result = await Receita.updateOne(
     {
       cod_receita: cod_receita_alvo,
     },
     { $set: newPrescription }
   );
-
-  if (result) {
-    console.log(`${result.matchedCount} document(s) matched the query criteria.`);
-    console.log(`${result.modifiedCount} document(s) was/were updated.`);
-  } else {
-    console.log(`No prescription found with the cod ${cod_receita_alvo}:`);
-  }
 }
 
 
 exports.put = async(req, res, next) => {
   try {
     const data = await this.updateAppointmentByCod({
-      req.params.cod_receita_alvo
+      cod_receita_alvo: req.body.cod_receita_alvo
     }, req.body.newPrescription);
     res.status(200).send(data);
   } catch (e) {
@@ -176,8 +142,8 @@ exports.put = async(req, res, next) => {
 };
 
 // excluir uma consulta especifica
-async function deleteAppointmentByCod(client, cod_receita_alvo) {
-  const result = await client.db('test').collection('receitas').deleteOne({
+async function deleteAppointmentByCod(cod_receita_alvo) {
+  const result = await Receita.deleteOne({
     cod_receita: cod_receita_alvo,
   });
   console.log(`${result.deletedCount} document(s) was/were deleted.`);
@@ -185,9 +151,9 @@ async function deleteAppointmentByCod(client, cod_receita_alvo) {
 
 exports.delete = async(req, res, next) => {
   try{
-      await this.deleteAppointmentByCod(
-        req.params.cod_receita_alvo
-        ); 
+      await this.deleteAppointmentByCod({
+        cod_receita_alvo:req.params.cod_receita_alvo
+      }); 
       res.status(200).send({
           message: 'Receita removida com sucesso!'
       });

@@ -3,7 +3,6 @@ const router = express.Route();
 const controller = require('../controller/receita');
 
 router.post('/', controller.post);
-
 router.get('/cod', constroller.getByCod);
 router.get('/patient', constroller.getByPatient);
 router.put('/put', controller.put);

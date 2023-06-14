@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongodb');
-const Consulta = mongoose.model('Consulta');
+const Consulta = mongoose.model('consultas');
 
 // cria uma consulta POST
 exports.post = async (req, res, next) => {
@@ -44,46 +44,23 @@ exports.post = async (req, res, next) => {
 // }
 
 // retorna consulta buscada pela tupla (medico, paciente, data) - isso vai ser mudado para a funcao abaixo getByTuple
-async function findOneAppointmentByTuple(client, { doctor, patient, date } = {}) {
-  const result = await client.db('test').collection('consultas').findOne({
+async function findOneAppointmentByTuple(doctor, patient, date ) {
+  const result = await Consulta.findOne({
     'codigo.medico': doctor,
     'codigo.paciente': patient,
     'codigo.dataConsulta': date,
   });
 
-  if (result) {
-    console.log(
-      `Found an appointment in the collection with the tuple ('${doctor}', '${patient}', '${date}'):`
-    );
-    console.log(result);
-  } else {
-    console.log(`No appointment found with the tuple ('${doctor}', '${patient}', '${date}'):`);
-  }
+  return result;
 }
 
 // retorna consulta buscada pela tupla (medico, paciente, data)
 exports.getByTuple = async (req, res, next) => {
   try {
-    const data = await Consulta.find({
-      'codigo.medico': doctor,
-      'codigo.paciente': patient,
-      'codigo.dataConsulta': date,
-    });
-    res.status(200).send(data);
-  } catch (e) {
-    res.status(500).send({
-      message: 'Falha ao processar requisição',
-    });
-  }
-};
-
-// minha sugestão com base no código github
-exports.getByTuple = async (req, res, next) => {
-  try {
     const data = await this.findOneAppointmentByTuple({
-      req.params.doctor,
-      req.params.patient,
-      req.params.date,
+      doctor:req.params.doctor,
+      patient:req.params.patient,
+      date:req.params.date
     });
     res.status(200).send(data);
   } catch (e) {
@@ -93,26 +70,20 @@ exports.getByTuple = async (req, res, next) => {
   }
 };
 
+// // retorna todas as consultas de um determinado paciente
+async function findByPatient(patient) {
+  const cursor = Consulta.find({
+    'codigo.paciente': patient,
+  });
+
+  return results;
+}
 
 // retorna todas as consultas de um determinado paciente
 exports.getByPatient = async (req, res, next) => {
   try {
-    const data = await Consulta.find({
-      'codigo.paciente': patient,
-    });
-    res.status(200).send(data);
-  } catch (e) {
-    res.status(500).send({
-      message: 'Falha ao processar requisição',
-    });
-  }
-};
-
-// minha sugestão
-exports.getByPatient = async (req, res, next) => {
-  try {
     const data = await this.findByPatient({
-      req.params.patient,
+      patient:req.params.patient,
     });
     res.status(200).send(data);
   } catch (e) {
@@ -123,39 +94,27 @@ exports.getByPatient = async (req, res, next) => {
 };
 
 
-// // retorna todas as consultas de um determinado paciente
-async function findByPatient(client, patient) {
-  const cursor = client.db('test').collection('consultas').find({
-    'codigo.paciente': patient,
-  });
 
-  // Store the results in an array
-  const results = await cursor.toArray();
-
-  // Print the results
-  if (results.length > 0) {
-    console.log(`Found appointment(s) with patient ${patient}:`);
-    results.forEach((result, i) => {
-      const date = new Date(result.codigo.dataConsulta).toDateString();
-
-      console.log();
-      console.log(`${i + 1}. medico: ${result.codigo.medico}`);
-      console.log(`   _id: ${result._id}`);
-      console.log(`   paciente: ${result.codigo.paciente}`);
-      console.log(`   data: ${date}`);
-    });
-  } else {
-    console.log(`No appointments found with patient ${patient}:`);
-  }
+//atualizar uma determinada consulta
+async function updateAppointmentByTuple(doctor, patient, date, newAppointment) {
+  const result = await Consulta.updateOne(
+    {
+      'codigo.medico': doctor,
+      'codigo.paciente': patient,
+      'codigo.dataConsulta': date,
+    },
+    { $set: newAppointment }
+  );
 }
+
 
 //atualizar uma determinada consulta
 exports.put = async(req, res, next) => {
   try {
-    const data = await this.updateAppointmentByTuple({
-      req.params.doctor,
-      req.params.patient,
-      req.params.date,
+    await this.updateAppointmentByTuple({
+      doctor:req.body.doctor,
+      patient:req.body.patient,
+      date:req.body.date
     }, req.body.newAppointment);
     res.status(200).send(data);
   } catch (e) {
@@ -166,41 +125,22 @@ exports.put = async(req, res, next) => {
 
 };
 
-//atualizar uma determinada consulta
-async function updateAppointmentByTuple(client, { doctor, patient, date } = {}, newAppointment) {
-  const result = await client.db('test').collection('consultas').updateOne(
-    {
-      'codigo.medico': doctor,
-      'codigo.paciente': patient,
-      'codigo.dataConsulta': date,
-    },
-    { $set: newAppointment }
-  );
-
-  if (result) {
-    console.log(`${result.matchedCount} document(s) matched the query criteria.`);
-    console.log(`${result.modifiedCount} document(s) was/were updated.`);
-  } else {
-    console.log(`No appointment found with the tuple ('${doctor}', '${patient}', '${date}'):`);
-  }
-}
-
 // excluir uma consulta especifica
-async function deleteAppointmentByTuple(client, doctor, patient, date) {
-  const result = await client.db('test').collection('consultas').deleteOne({
+async function deleteAppointmentByTuple(doctor, patient, date) {
+  const result = await Consulta.deleteOne({
     'codigo.medico': doctor,
     'codigo.paciente': patient,
     'codigo.dataConsulta': date,
   });
-  console.log(`${result.deletedCount} document(s) was/were deleted.`);
 }
 
 exports.delete = async(req, res, next) => {
   try{
-      await this.deleteAppointmentByTuple(
-        req.params.doctor,
-        req.params.patient,
-        req.params.date); 
+      await this.deleteAppointmentByTuple({
+        doctor:req.params.doctor,
+        patient:req.params.patient,
+        date:req.params.date
+      }); 
       res.status(200).send({
           message: 'Consulta removido com sucesso!'
       });
