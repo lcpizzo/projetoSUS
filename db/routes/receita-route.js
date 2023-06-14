@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Route();
-const controller = require('../controller/consulta');
+const controller = require('../controller/receita');
 
 router.post('/', controller.post);
 
+router.get('/cod', constroller.getByCod);
 router.get('/patient', constroller.getByPatient);
-router.get('/tuplaConsulta', controller.getByTuple);
 router.put('/put', controller.put);
 router.delete('/delete', controller.delete);
 

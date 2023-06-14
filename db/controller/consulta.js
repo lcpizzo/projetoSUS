@@ -77,6 +77,23 @@ exports.getByTuple = async (req, res, next) => {
   }
 };
 
+// minha sugestão com base no código github
+exports.getByTuple = async (req, res, next) => {
+  try {
+    const data = await this.findOneAppointmentByTuple({
+      req.params.doctor,
+      req.params.patient,
+      req.params.date,
+    });
+    res.status(200).send(data);
+  } catch (e) {
+    res.status(500).send({
+      message: 'Falha ao processar requisição',
+    });
+  }
+};
+
+
 // retorna todas as consultas de um determinado paciente
 exports.getByPatient = async (req, res, next) => {
   try {
@@ -91,31 +108,63 @@ exports.getByPatient = async (req, res, next) => {
   }
 };
 
+// minha sugestão
+exports.getByPatient = async (req, res, next) => {
+  try {
+    const data = await this.findByPatient({
+      req.params.patient,
+    });
+    res.status(200).send(data);
+  } catch (e) {
+    res.status(500).send({
+      message: 'Falha ao processar requisição',
+    });
+  }
+};
+
+
 // // retorna todas as consultas de um determinado paciente
-// async function findByPatient(client, patient) {
-//   const cursor = client.db('test').collection('consultas').find({
-//     'codigo.paciente': patient,
-//   });
+async function findByPatient(client, patient) {
+  const cursor = client.db('test').collection('consultas').find({
+    'codigo.paciente': patient,
+  });
 
-//   // Store the results in an array
-//   const results = await cursor.toArray();
+  // Store the results in an array
+  const results = await cursor.toArray();
 
-//   // Print the results
-//   if (results.length > 0) {
-//     console.log(`Found appointment(s) with patient ${patient}:`);
-//     results.forEach((result, i) => {
-//       const date = new Date(result.codigo.dataConsulta).toDateString();
+  // Print the results
+  if (results.length > 0) {
+    console.log(`Found appointment(s) with patient ${patient}:`);
+    results.forEach((result, i) => {
+      const date = new Date(result.codigo.dataConsulta).toDateString();
 
-//       console.log();
-//       console.log(`${i + 1}. medico: ${result.codigo.medico}`);
-//       console.log(`   _id: ${result._id}`);
-//       console.log(`   paciente: ${result.codigo.paciente}`);
-//       console.log(`   data: ${date}`);
-//     });
-//   } else {
-//     console.log(`No appointments found with patient ${patient}:`);
-//   }
-// }
+      console.log();
+      console.log(`${i + 1}. medico: ${result.codigo.medico}`);
+      console.log(`   _id: ${result._id}`);
+      console.log(`   paciente: ${result.codigo.paciente}`);
+      console.log(`   data: ${date}`);
+    });
+  } else {
+    console.log(`No appointments found with patient ${patient}:`);
+  }
+}
+
+//atualizar uma determinada consulta
+exports.put = async(req, res, next) => {
+  try {
+    const data = await this.updateAppointmentByTuple({
+      req.params.doctor,
+      req.params.patient,
+      req.params.date,
+    }, req.body.newAppointment);
+    res.status(200).send(data);
+  } catch (e) {
+    res.status(500).send({
+      message: 'Falha ao processar requisição',
+    });
+  }
+
+};
 
 //atualizar uma determinada consulta
 async function updateAppointmentByTuple(client, { doctor, patient, date } = {}, newAppointment) {
@@ -145,3 +194,20 @@ async function deleteAppointmentByTuple(client, doctor, patient, date) {
   });
   console.log(`${result.deletedCount} document(s) was/were deleted.`);
 }
+
+exports.delete = async(req, res, next) => {
+  try{
+      await this.deleteAppointmentByTuple(
+        req.params.doctor,
+        req.params.patient,
+        req.params.date); 
+      res.status(200).send({
+          message: 'Consulta removido com sucesso!'
+      });
+  } catch (e) {
+      res.status(400).send({
+          message: 'Falha ao remover consulta',
+          data: e
+      })
+  }
+};
