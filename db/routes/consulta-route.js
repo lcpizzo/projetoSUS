@@ -1,11 +1,14 @@
-const express = require('express');
-const router = express.Route();
-const controller = require('../controller/consulta');
+import express from 'express';
+import consultaControllers from '../controller/consulta.js';
+const router = express.Router();
 
-router.post('/', controller.post);
-router.get('/patient', constroller.getByPatient);
-router.get('/tuplaConsulta', controller.getByTuple);
-router.put('/put', controller.put);
-router.delete('/delete', controller.delete);
+router.post('/', consultaControllers.post);
+router.get('/', consultaControllers.getAll);
+router.get('/patient', consultaControllers.getByPatient);
+router.get('/tuplaConsulta', consultaControllers.getByTuple);
+router.put('/put', consultaControllers.put);
+router.delete('/delete', consultaControllers.delete);
 
-module.exports = router;
+// module.exports = router;
+
+export default router;
