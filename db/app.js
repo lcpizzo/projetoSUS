@@ -27,5 +27,9 @@ import consultaRoute from './routes/consulta-route.js';
 // app.use('/', indexRoute);
 app.use('/consulta', consultaRoute);
 
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+
 // module.exports = app;
 export default app;
