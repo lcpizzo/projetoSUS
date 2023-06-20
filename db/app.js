@@ -24,8 +24,12 @@ db.once('open', () => {
 import consultaRoute from './routes/consulta-route.js';
 // import Consulta from './models/consulta.js';
 
-// app.use('/', indexRoute);
+app.use(express.json());
+
 app.use('/consulta', consultaRoute);
 
 // module.exports = app;
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
 export default app;

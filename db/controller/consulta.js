@@ -6,14 +6,14 @@ const consultaControllers = {
   // cria uma consulta POST
   post: async (req, res, next) => {
     try {
-      let consulta = new Consulta({
-        codigo: {
-          medico: 'pazuelo',
-          paciente: 'jun',
-          dataConsulta: '11/06/2023',
-        },
-        dadosReceita: ['cloroquina', 'ivermectina'],
-      });
+      let dados = req.body;
+      
+      /*validar dados de entrada*/
+
+      console.log(Date.parse(dados.codigo.dataConsulta));
+
+      let consulta = new Consulta(dados);
+      
       await consulta.save();
       res.status(201).send({
         message: 'Consulta cadastrado com sucesso!',
@@ -39,7 +39,7 @@ const consultaControllers = {
       res.status(200).send(data);
     } catch (e) {
       res.status(500).send({
-        message: 'Deu ruim aqui bb',
+        message: 'Falha ao processar requisição',
       });
     }
   },
@@ -57,7 +57,7 @@ const consultaControllers = {
 
     try {
       const data = await findByPatient({
-        patient: req.params.patient,
+        patient: req.body.patient,
       });
       res.status(200).send(data);
     } catch (e) {
@@ -100,9 +100,9 @@ const consultaControllers = {
 
     try {
       const data = await findOneAppointmentByTuple({
-        doctor: req.params.doctor,
-        patient: req.params.patient,
-        date: req.params.date,
+        doctor: req.body.doctor,
+        patient: req.body.patient,
+        date: req.body.date,
       });
       res.status(200).send(data);
     } catch (e) {
@@ -154,9 +154,9 @@ const consultaControllers = {
 
     try {
       await deleteAppointmentByTuple({
-        doctor: req.params.doctor,
-        patient: req.params.patient,
-        date: req.params.date,
+        doctor: req.body.doctor,
+        patient: req.body.patient,
+        date: req.body.date,
       });
       res.status(200).send({
         message: 'Consulta removido com sucesso!',
