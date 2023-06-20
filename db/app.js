@@ -28,10 +28,6 @@ app.use(express.json());
 
 app.use('/consulta', consultaRoute);
 
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
-});
-
 // module.exports = app;
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
