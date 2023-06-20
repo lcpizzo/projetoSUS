@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev":"nodemon ./db/app.js"
+    "dev": "nodemon ./db/app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.2.4",
     "nodemon": "^2.0.22"
   },
-  "type":"module"
+  "type": "module"
 }
