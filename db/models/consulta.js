@@ -1,33 +1,34 @@
 import mongoose from 'mongoose';
 
-const consultaSchema = new mongoose.Schema({
+const codigoAgregadoModel = new mongoose.Schema({
   medico: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true,
-    ref: 'Funcionario',
+    ref: 'funcionario',
   },
   paciente: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true,
-    ref: 'Paciente',
+    ref: 'funcionario',
   },
   dataConsulta: {
     type: Date,
     required: true,
   },
+});
+
+const consultaSchema = new mongoose.Schema({
   codigo: {
-    type: String,
+    type: codigoAgregadoModel,
     required: true,
     trim: true,
     unique: true,
   },
-  receita: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Receita',
+  dadosReceita: {
+    type: [String],
+    ref: 'receita',
   },
 });
-
-consulta.index({medico:1, paciente:1, dataConsulta:1}, {unique:true});
 
 const consulta = mongoose.model('Consulta', consultaSchema);
 

@@ -1,31 +1,36 @@
 import db from './dbConnect.js';
-import medicamento from './models/medicamento.js';
-import posto from './models/posto.js';
-import funcionario from './models/funcionario.js';
-import paciente from './models/paciente.js';
-import receita from './models/receita.js';
+import express from 'express';
+
+import consultaRoute from './routes/consulta-route.js';
+// import funcionarioRoute from './routes/funcionario-route.js';
+// import medicamentoRoute from './routes/medicamento-route.js';
+// import pacienteRoute from './routes/paciente-route.js';
+// import pedidoRoute from './routes/pedido-route.js';
+// import postoRoute from './routes/posto-route.js';
+import receitaRoute from './routes/receita-route.js';
+
+const app = express();
 
 const port = process.env.PORT || 3000;
 
-db.on("error", console.log.bind(console, "Erro de conexão"));
-
-db.once("open", async function () {
-  console.log("Conexão com o banco feita com sucesso");
-
-  
-  const input = {
-    cod_receita:'aspodfikas´pdofkp',
-    validade:'12/12/12',
-    medico:'643739f139515c3b2638fdff',
-    paciente:'64373a3eeb9d5c052951d49f',
-  }
-  
-  const med = new receita(input);
-  
-  await med.save();
-  
-  //const med = await posto.find();
-  
-  console.log(med);
+db.on('error', console.log.bind(console, 'Erro de conexão'));
+db.once('open', () => {
+  console.log(`Conexão com o banco na porta ${port} feita com sucesso`);
 });
 
+app.use(express.json());
+
+app.use('/consulta', consultaRoute);
+// app.use('/funcionario', funcionarioRoute);
+// app.use('/medicamento', medicamentoRoute);
+// app.use('/paciente', pacienteRoute);
+// app.use('/pedido', pedidoRoute);
+// app.use('/posto', postoRoute);
+
+app.use('/consulta', consultaRoute);
+app.use('/receita', receitaRoute);
+
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+export default app;
