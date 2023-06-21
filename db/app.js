@@ -22,11 +22,13 @@ db.once('open', () => {
 
 // const consultaRoute = require('./routes/consulta-route.js');
 import consultaRoute from './routes/consulta-route.js';
+import receitaRoute from './routes/receita-route.js';
 // import Consulta from './models/consulta.js';
 
 app.use(express.json());
 
 app.use('/consulta', consultaRoute);
+app.use('/receita', receitaRoute);
 
 // module.exports = app;
 app.listen(port, () => {

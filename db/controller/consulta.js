@@ -8,6 +8,7 @@ const consultaControllers = {
     try {
       let dados = req.body;
 
+      // TODO: validar dados da nova consulta
       let consulta = new Consulta(dados);
       
       await consulta.save();
