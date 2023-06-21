@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import Receita from '../models/receita.js';
 
+// TODO: testar todos os métodos
+
 // cria uma receita post
 const receitaController = {
   post: async(req, res, next) => {
