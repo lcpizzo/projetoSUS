@@ -6,8 +6,8 @@ router.post('/', consultaControllers.post);
 router.get('/', consultaControllers.getAll);
 router.get('/patient', consultaControllers.getByPatient);
 router.get('/tuplaConsulta', consultaControllers.getByTuple);
-router.put('/put', consultaControllers.put);
-router.delete('/delete', consultaControllers.delete);
+router.put('/', consultaControllers.put);
+router.delete('/', consultaControllers.delete);
 
 // module.exports = router;
 
