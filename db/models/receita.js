@@ -7,7 +7,7 @@ const receituarioModel = new mongoose.Schema({
         required:true
     },
     frequencia: {
-        type: Int32Array,
+        type: Number,
         required:true,
     },
     dose: {

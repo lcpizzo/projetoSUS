@@ -1,35 +1,101 @@
-const { MongoClient } = require('mongodb');
-// const { default: medicamento } = require('../models/medicamento');
-const Receita = mongoose.model('receitas');
+import mongoose from 'mongoose';
+import Receita from '../models/receita.js';
+
+// TODO: testar todos os métodos
 
 // cria uma receita post
-exports.post =async (req, res, next) => {
-  try {
-    let receita = new Receita({
-      cod_receita: '123',
-      receituario: {
-        medicamento: { nome: 'dipirona', codigo: '123456', preco: 25.48 },
-        frequencia: 2,
-        dose: 'comprimido 500 ml',
+const receitaController = {
+  post: async(req, res, next) => {
+    try{
+      let dados = req.body;
+
+      // TODO: validar dados da nova receita
+      let receita = new Receita(dados);
+
+      await receita.save();
+      res.status(201).send({
+        message: 'Receita cadastrada com sucesso',
+      })
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição post'
+      })
+    }
+  },
+
+  findPrescriptionByCode: async(req, res, next) => {
+    try{
+      let receita = await Receita.find({
+        cod_receita: req.params.codigo
+      })
+  
+      res.status(200).send(receita);
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição findPrescriptionByCode'
+      })
+    }
+  },
+
+  getAll: async(req, res, next) => {
+    try{
+      let receitas = await Receita.find({})
+  
+      res.status(200).send(receitas);
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição findPrescriptionByCode'
+      })
+    }
+  },
+
+  findPrescriptionByPatient: async(req, res, next) => {
+    try {
+      let receita = await Receita.find({
+        paciente: req.params.paciente
+      })
+
+      res.status(200).send(receita);
+    } catch (e) { 
+      res.status(500).send({
+        message: 'Falha ao processar requisição findPrescriptionByPatient'
+      })
+    }
+  },
+
+  updatePrescriptionByCode: async(req, res, next) => {
+    try{
+      let receita = await Receita.updateOne({
+        cod_receita: req.params.codigo
       },
-      validade: '10/06/2024',
-      medico: 'muzzi',
-      paciente: 'jorge'
+      { $set: req.body.newPrescription})
 
-    });
-    await receita.save();
-    res.status(201).send({
-      message: 'Receita cadastrada com sucesso!'
-    });
-  } catch (e) {
-    console.error(e);
-    res.status(500).send({
-      message: 'Falha ao processar requisição',
-      data: e,
-    });
-  }
-};
+      res.status(200).send({
+        message: 'Receita atualizada com sucesso'
+      })
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição updatePrescriptionByCode'
+      })
+    }
+  },
 
+  deletePrescriptionByCode: async(req, res, next) => {
+    try {
+      let receita = await Receita.deleteOne({
+        cod_receita: req.params.codigo
+      })
+
+      res.status(200).send({
+        message: 'Receita deletada com sucesso'
+      })
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição deletePrescriptionByCode'
+      })
+    }
+  },
+}
 
 // try {
 //   await client.connect();
@@ -69,98 +135,4 @@ exports.post =async (req, res, next) => {
 //   console.log(result.insertedIds);
 // }
 
-// retorna consulta buscada pelo codigo da receita
-async function findOnePrescriptionByCod(cod_receita_alvo) {
-  const result = await Receita.findOne({
-    cod_receita: cod_receita_alvo,
-  });
-
-  return result;
-}
-
-exports.getByCod = async (req, res, next) => {
-  try {
-    const data = await this.findOnePrescriptionByCod({
-      cod_receita_alvo: req.params.cod_receita_alvo
-    });
-    res.status(200).send(data);
-  } catch (e) {
-    res.status(500).send({
-      message: 'Falha ao processar requisição',
-    });
-  }
-};
-
-
-// retorna todas as receitas de um determinado paciente
-async function findByPatient(patient) {
-  const cursor = Receita.find({
-    paciente: patient,
-  });
-
-  // Store the results in an array
-  return result;
-}
-
-exports.getByPatient = async (req, res, next) => {
-  try {
-    const data = await this.findByPatient({
-      patient:req.params.patient
-    });
-    res.status(200).send(data);
-  } catch (e) {
-    res.status(500).send({
-      message: 'Falha ao processar requisição',
-    });
-  }
-};
-
-
-//atualizar uma determinada consulta
-async function updateAppointmentByCod(cod_receita_alvo, newPrescription) {
-  const result = await Receita.updateOne(
-    {
-      cod_receita: cod_receita_alvo,
-    },
-    { $set: newPrescription }
-  );
-}
-
-
-exports.put = async(req, res, next) => {
-  try {
-    const data = await this.updateAppointmentByCod({
-      cod_receita_alvo: req.body.cod_receita_alvo
-    }, req.body.newPrescription);
-    res.status(200).send(data);
-  } catch (e) {
-    res.status(500).send({
-      message: 'Falha ao processar requisição',
-    });
-  }
-
-};
-
-// excluir uma consulta especifica
-async function deleteAppointmentByCod(cod_receita_alvo) {
-  const result = await Receita.deleteOne({
-    cod_receita: cod_receita_alvo,
-  });
-  console.log(`${result.deletedCount} document(s) was/were deleted.`);
-}
-
-exports.delete = async(req, res, next) => {
-  try{
-      await this.deleteAppointmentByCod({
-        cod_receita_alvo:req.params.cod_receita_alvo
-      }); 
-      res.status(200).send({
-          message: 'Receita removida com sucesso!'
-      });
-  } catch (e) {
-      res.status(400).send({
-          message: 'Falha ao remover consulta',
-          data: e
-      })
-  }
-};
+export default receitaController;
