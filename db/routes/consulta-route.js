@@ -9,6 +9,4 @@ router.get('/tuplaConsulta', consultaControllers.getByTuple);
 router.put('/put', consultaControllers.put);
 router.delete('/delete', consultaControllers.delete);
 
-// module.exports = router;
-
 export default router;
