@@ -44,25 +44,55 @@ const consultaControllers = {
     }
   },
 
+  /*
   // retorna todas as consultas de um determinado paciente
   getByPatient: async (req, res, next) => {
-    // // retorna todas as consultas de um determinado paciente
+    // retorna todas as consultas de um determinado paciente
     async function findByPatient(patient) {
+      console.log(patient);
       const cursor = Consulta.find({
-        'codigo.paciente': patient,
+        codigo:{ paciente: patient},
       });
+
+      console.log(cursor);
 
       return results;
     }
 
     try {
       const data = await findByPatient({
-        patient: req.body.patient,
+        patient: req.body.codigo.paciente,
       });
       res.status(200).send(data);
     } catch (e) {
       res.status(500).send({
-        message: 'Falha ao processar requisição',
+        message: 'Falha ao processar requisição getByPatient',
+        erro: e
+      });
+    }
+  },*/
+
+  
+  // retorna todas as consultas de um determinado paciente
+  getByPatient: async (req, res, next) => {
+    // retorna todas as consultas de um determinado paciente
+    async function findByPatient(patient) {
+      let pacientes = await Consulta.find({});
+
+      let paciente = pacientes.filter(consulta => 
+        consulta.codigo.paciente == patient);
+
+      return paciente;
+    }
+
+    try {
+      const data = await findByPatient(req.body.codigo['paciente']);
+
+      res.status(200).send(data);
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição getByPatient',
+        erro: e
       });
     }
   },
@@ -88,26 +118,23 @@ const consultaControllers = {
   // retorna consulta buscada pela tupla (medico, paciente, data)
   getByTuple: async (req, res, next) => {
     // retorna consulta buscada pela tupla (medico, paciente, data) - isso vai ser mudado para a funcao abaixo getByTuple
-    async function findOneAppointmentByTuple(doctor, patient, date) {
+    async function findOneAppointmentByTuple(data) {
       const result = await Consulta.findOne({
-        'codigo.medico': doctor,
-        'codigo.paciente': patient,
-        'codigo.dataConsulta': date,
-      });
+        
+          medico: data.medico,
+          paciente: data.paciente,
+          dataConsulta: data.dataConsulta
+    });
 
       return result;
     }
 
     try {
-      const data = await findOneAppointmentByTuple({
-        doctor: req.body.doctor,
-        patient: req.body.patient,
-        date: req.body.date,
-      });
+      const data = await findOneAppointmentByTuple(req.body.codigo);
       res.status(200).send(data);
     } catch (e) {
       res.status(500).send({
-        message: 'Falha ao processar requisição',
+        message: 'Falha ao processar requisição getByConsulta',
       });
     }
   },
