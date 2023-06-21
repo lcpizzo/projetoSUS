@@ -43,46 +43,14 @@ const consultaControllers = {
       });
     }
   },
-
-  /*
-  // retorna todas as consultas de um determinado paciente
-  getByPatient: async (req, res, next) => {
-    // retorna todas as consultas de um determinado paciente
-    async function findByPatient(patient) {
-      console.log(patient);
-      const cursor = Consulta.find({
-        codigo:{ paciente: patient},
-      });
-
-      console.log(cursor);
-
-      return results;
-    }
-
-    try {
-      const data = await findByPatient({
-        patient: req.body.codigo.paciente,
-      });
-      res.status(200).send(data);
-    } catch (e) {
-      res.status(500).send({
-        message: 'Falha ao processar requisição getByPatient',
-        erro: e
-      });
-    }
-  },*/
-
   
   // retorna todas as consultas de um determinado paciente
   getByPatient: async (req, res, next) => {
     // retorna todas as consultas de um determinado paciente
     async function findByPatient(patient) {
-      let pacientes = await Consulta.find({});
+      let consulta = await Consulta.find({'codigo.paciente': patient});
 
-      let paciente = pacientes.filter(consulta => 
-        consulta.codigo.paciente == patient);
-
-      return paciente;
+      return consulta;
     }
 
     try {
