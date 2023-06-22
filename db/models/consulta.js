@@ -1,7 +1,16 @@
 import mongoose from 'mongoose';
 
 const codigoAgregadoModel = new mongoose.Schema({
+  medico_codigo: {
+    type: String,
+    required: true,
+    ref: 'Funcionario',
+  },
   medico: {
+    type: String,
+    required: true,
+  },
+  paciente_codigo: {
     type: String,
     required: true,
     ref: 'Funcionario',
@@ -9,7 +18,6 @@ const codigoAgregadoModel = new mongoose.Schema({
   paciente: {
     type: String,
     required: true,
-    ref: 'Funcionario',
   },
   dataConsulta: {
     type: Date,
@@ -24,9 +32,12 @@ const consultaSchema = new mongoose.Schema({
     trim: true,
     unique: true,
   },
-  dadosReceita: {
+  receita_codigo: {
     type: [String],
     ref: 'Receita',
+  },
+  dadosReceita: {
+    type: [String],
   },
 });
 
