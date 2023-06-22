@@ -1,13 +1,13 @@
 import express from 'express';
-import receitaController from '../controller/receita.js';
+import receitaControllers from '../controller/receita.js';
 const router = express.Router();
 
 router
-  .post('/', receitaController.post)
-  .get('/', receitaController.getAll)
-  .get('/codigo/:codigo', receitaController.findPrescriptionByCode)
-  .get('/paciente/:paciente', receitaController.findPrescriptionByPatient)
-  .put('/codigo/:codigo', receitaController.updatePrescriptionByCode)
-  .delete('/codigo/:codigo', receitaController.deletePrescriptionByCode);
+  .post('/', receitaControllers.post)
+  .get('/', receitaControllers.getAll)
+  .get('/codigo/:codigo', receitaControllers.findPrescriptionByCode)
+  .get('/paciente/:paciente', receitaControllers.findPrescriptionByPatient)
+  .put('/codigo/:codigo', receitaControllers.updatePrescriptionByCode)
+  .delete('/codigo/:codigo', receitaControllers.deletePrescriptionByCode);
 
 export default router;

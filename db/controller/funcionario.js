@@ -1,86 +1,123 @@
-const { MongoClient } = require('mongodb');
-const { default: funcionario } = require('../models/funcionario');
+import mongoose from 'mongoose';
+import Funcionario from '../models/funcionario.js';
 
-try {
-  await client.connect();
-  await createMultipleListings(client, [
-    {
-      codigoRegional: '123',
-      nome: 'jorge',
-      tipo: 'medico',
-      cpf: '313.313.545-91',
-      uf: 'SP',
-    },
-    {
-      codigoRegional: '1234',
-      nome: 'manoel',
-      tipo: 'medico',
-      cpf: '123.456.789-01',
-      uf: 'RJ',
-    },
-  ]);
-} catch (e) {
-  console.error(e);
-}
 
-// cria multiplos funcionarios
-async function createMultipleListings(client, newFuncionarios) {
-  const result = await client.db('test').collection('funcionarios').insertMany(newFuncionarios);
+const funcionarioControllers = {
+  // cria um funcionario POST
+  post: async (req, res, next) => {
+    try {
+      let dados = req.body;
+      let funcionario = new Funcionario(dados);
+      await funcionario.save();
+      res.status(201).send({
+        message: 'Funcionario cadastrado com sucesso!',
+      });
+    } catch (e) {
+      console.error(e);
+      res.status(500).send({
+        message: 'Falha ao processar requisição',
+        data: e,
+      });
+    }
+  },
 
-  console.log(`${result.insertedCount} new listing(s) created with the following id(s):`);
-  console.log(result.insertedIds);
-}
+  getAll: async (req, res, next) => {
+    async function findAllFuncionarios() {
+      const cursor = Funcionario.find({});
 
-// retorna funcionario conforme busca por seu CRM
-async function findOneByCRM(client, crm) {
-  const result = await client.db('test').collection('funcionarios').find({
-    codigoRegional: crm,
-  });
+      return cursor;
+    }
 
-  if (result) {
-    console.log(`Found a listing in the collection with the CRM code '${crm}':`);
-    console.log(result);
-  } else {
-    console.log(`No listings found with the CRM code '${crm}'`);
-  }
-}
+    try {
+      const data = await findAllFuncionarios();
+      res.status(200).send(data);
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição',
+      });
+    }
+  },
 
-// retorna funcionarios conforme busca de estado do pais
-async function findEmployeeByState(client, uf) {
-  const result = await client.db('test').collection('funcionarios').find({
-    uf: uf,
-  });
+  getByCodReg: async (req, res, next) => {
+    // retorna o funcionario pelo ceu crm
+    async function findByCodReg(codreg) {
+      let funcionario = await Funcionario.findOne({ 'codigoRegional': codreg });
 
-  if (result) {
-    console.log(`Found an employee in the collection with the state ('${uf}'):`);
-    console.log(result);
-  } else {
-    console.log(`No employee found with the state ('${uf}')`);
-  }
-}
+      return funcionario;
+    }
 
-// atualiza funcionario conforme seu CRM
-async function updateEmployeeInformations(client, crm, newEmployee) {
-  const result = await client.db('test').collection('funcionarios').updateOne(
-    {
-      codigoRegional: crm,
-    },
-    { $set: newEmployee }
-  );
+    try {
+      const data = await findByCodReg(req.params.codigoRegional);
+      res.status(200).send(data);
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição getByCodReg',
+        erro: e,
+      });
+    }
+  },
 
-  if (result) {
-    console.log(`${result} updated.`);
-  } else {
-    console.error(`No employee with the CRM code ${crm} found.`);
-  }
-}
+  getByUf: async (req, res, next) => {
+    // retorna todos os funcionarios de um estado
+    async function findByUf(uf) {
+      let funcionario = await Funcionario.find({ 'uf': uf });
 
-// deleta funcionario conforme seu CRM
-async function deleteEmployee(client, crm) {
-  const result = await client
-    .db('test')
-    .collection('funcionarios')
-    .deleteOne({ codigoRegional: crm });
+      return funcionario;
+    }
 
-  console.log(`${result} deleted`);
-}
+    try {
+      const data = await findByUf(req.params.uf);
+      res.status(200).send(data);
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição getByUf',
+        erro: e,
+      });
+    }
+  },
+
+  // atualizar um funcionario pelo codigo regional de atuacao
+  put: async (req, res, next) => {
+    // atualizar um funcionario, encontrado pelo codigo regional de atuacao
+    async function updateWorkerByCodReg(codreg) {
+      const result = await Paciente.updateOne(
+        {'codigoRegional':codreg},
+        {$set: newWorker}
+      );
+      return reseult;
+    };
+
+    try {
+      let data = await updateWorkerByCodReg(req.params.codigoRegional);
+      res.status(200).send({data: data, mensagem: "Sucesso ao atualizar o funcionário"});
+
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição updateWorkerByCodReg',
+      });
+    }
+  },
+
+  delete: async (req, res, next) => {
+    // excluir um funcionario pelo seu codigo regional
+    async function deleteWorkerByCodReg(codreg) {
+      const result = await Paciente.deleteOne({'codigoRegional':codreg});
+    }
+
+    try {
+      await deleteWorkerByCodReg(req.params.codigoRegional);
+      res.status(200).send({
+        message: 'Funcionário removido com sucesso!',
+      });
+    } catch (e) {
+      res.status(400).send({
+        message: 'Falha ao remover funcionário',
+        data: e,
+      });
+    }
+  },
+
+
+};
+
+export default funcionarioControllers;
