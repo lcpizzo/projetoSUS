@@ -10,7 +10,6 @@ const consultaControllers = {
 
       // TODO: validar dados da nova consulta
       let consulta = new Consulta(dados);
-      
       await consulta.save();
       res.status(201).send({
         message: 'Consulta cadastrado com sucesso!',
@@ -40,24 +39,29 @@ const consultaControllers = {
       });
     }
   },
-  
+
   // retorna todas as consultas de um determinado paciente
   getByPatient: async (req, res, next) => {
     // retorna todas as consultas de um determinado paciente
     async function findByPatient(patient) {
-      let consulta = await Consulta.find({'codigo.paciente': patient});
+      let consulta = await Consulta.find({ 'codigo.paciente': patient });
 
       return consulta;
     }
 
     try {
+      // {
+      //   "codigo": {
+      //     "paciente": ""
+      //   }
+      // }
       const data = await findByPatient(req.body.codigo['paciente']);
 
       res.status(200).send(data);
     } catch (e) {
       res.status(500).send({
         message: 'Falha ao processar requisição getByPatient',
-        erro: e
+        erro: e,
       });
     }
   },
@@ -84,12 +88,11 @@ const consultaControllers = {
   getByTuple: async (req, res, next) => {
     // retorna consulta buscada pela tupla (medico, paciente, data) - isso vai ser mudado para a funcao abaixo getByTuple
     async function findOneAppointmentByTuple(data) {
-
-      const result = await Consulta.findOne({ 
-          'codigo.medico': data.medico,
-          'codigo.paciente': data.paciente,
-          'codigo.dataConsulta': data.dataConsulta
-      });    
+      const result = await Consulta.findOne({
+        'codigo.medico': data.medico,
+        'codigo.paciente': data.paciente,
+        'codigo.dataConsulta': data.dataConsulta,
+      });
 
       console.log(result);
 
@@ -97,6 +100,13 @@ const consultaControllers = {
     }
 
     try {
+      // {
+      //   "codigo": {
+      //     "medico": "",
+      //     "paciente": "",
+      //     "dataConsulta": ""
+      //   }
+      // }
       const data = await findOneAppointmentByTuple(req.body.codigo);
       res.status(200).send(data);
     } catch (e) {
@@ -122,6 +132,25 @@ const consultaControllers = {
       return result;
     }
     try {
+      // {
+      //   "codigo": {
+      //     "medico": "",
+      //     "paciente": "",
+      //     "dataConsulta": ""
+      //   },
+      //   "newAppointment": {
+      //     "codigo": {
+      //       "medico": "",
+      //       "paciente": "",
+      //       "dataConsulta": ""
+      //     },
+      //     "dadosReceita": [
+      //       "",
+      //       "",
+      //       ""
+      //     ]
+      //   }
+      // }
       let data = await updateAppointmentByTuple(
         req.body.codigo.medico,
         req.body.codigo.paciente,
@@ -129,7 +158,7 @@ const consultaControllers = {
         req.body.newAppointment
       );
 
-      res.status(200).send({data: data, mensagem: "Sucesso ao atualizar a consulta"});
+      res.status(200).send({ data: data, mensagem: 'Sucesso ao atualizar a consulta' });
     } catch (e) {
       res.status(500).send({
         message: 'Falha ao processar requisição updateAppointmentByTuple',
@@ -151,7 +180,7 @@ const consultaControllers = {
       await deleteAppointmentByTuple(
         req.body.codigo.medico,
         req.body.codigo.paciente,
-        req.body.codigo.dataConsulta,
+        req.body.codigo.dataConsulta
       );
       res.status(200).send({
         message: 'Consulta removida com sucesso!',

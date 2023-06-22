@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const receituarioModel = new mongoose.Schema({
   medicamento: {
-    type: mongoose.Schema.Types.ObjectID,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'medicamento',
     required: true,
   },

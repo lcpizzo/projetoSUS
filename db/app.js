@@ -20,7 +20,6 @@ db.once('open', () => {
 
 app.use(express.json());
 
-app.use('/consulta', consultaRoute);
 // app.use('/funcionario', funcionarioRoute);
 // app.use('/medicamento', medicamentoRoute);
 // app.use('/paciente', pacienteRoute);

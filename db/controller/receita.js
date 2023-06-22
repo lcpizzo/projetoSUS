@@ -5,8 +5,8 @@ import Receita from '../models/receita.js';
 
 // cria uma receita post
 const receitaController = {
-  post: async(req, res, next) => {
-    try{
+  post: async (req, res, next) => {
+    try {
       let dados = req.body;
 
       // TODO: validar dados da nova receita
@@ -15,87 +15,93 @@ const receitaController = {
       await receita.save();
       res.status(201).send({
         message: 'Receita cadastrada com sucesso',
-      })
+      });
     } catch (e) {
       res.status(500).send({
-        message: 'Falha ao processar requisição post'
-      })
+        message: 'Falha ao processar requisição post',
+      });
     }
   },
 
-  findPrescriptionByCode: async(req, res, next) => {
-    try{
+  findPrescriptionByCode: async (req, res, next) => {
+    // http://localhost:3000/receita/codigo/<cod_receita>
+    try {
       let receita = await Receita.find({
-        cod_receita: req.params.codigo
-      })
-  
+        cod_receita: req.params.codigo,
+      });
+
       res.status(200).send(receita);
     } catch (e) {
       res.status(500).send({
-        message: 'Falha ao processar requisição findPrescriptionByCode'
-      })
+        message: 'Falha ao processar requisição findPrescriptionByCode',
+      });
     }
   },
 
-  getAll: async(req, res, next) => {
-    try{
-      let receitas = await Receita.find({})
-  
+  getAll: async (req, res, next) => {
+    try {
+      let receitas = await Receita.find({});
+
       res.status(200).send(receitas);
     } catch (e) {
       res.status(500).send({
-        message: 'Falha ao processar requisição findPrescriptionByCode'
-      })
+        message: 'Falha ao processar requisição findPrescriptionByCode',
+      });
     }
   },
 
-  findPrescriptionByPatient: async(req, res, next) => {
+  findPrescriptionByPatient: async (req, res, next) => {
+    //http://localhost:3000/receita/paciente/<cod-paciente>
     try {
       let receita = await Receita.find({
-        paciente: req.params.paciente
-      })
+        paciente: req.params.paciente,
+      });
 
       res.status(200).send(receita);
-    } catch (e) { 
-      res.status(500).send({
-        message: 'Falha ao processar requisição findPrescriptionByPatient'
-      })
-    }
-  },
-
-  updatePrescriptionByCode: async(req, res, next) => {
-    try{
-      let receita = await Receita.updateOne({
-        cod_receita: req.params.codigo
-      },
-      { $set: req.body.newPrescription})
-
-      res.status(200).send({
-        message: 'Receita atualizada com sucesso'
-      })
     } catch (e) {
       res.status(500).send({
-        message: 'Falha ao processar requisição updatePrescriptionByCode'
-      })
+        message: 'Falha ao processar requisição findPrescriptionByPatient',
+      });
     }
   },
 
-  deletePrescriptionByCode: async(req, res, next) => {
+  // ??????
+  updatePrescriptionByCode: async (req, res, next) => {
+    try {
+      let receita = await Receita.updateOne(
+        {
+          cod_receita: req.params.codigo,
+        },
+        { $set: req.body.newPrescription }
+      );
+
+      res.status(200).send({
+        message: 'Receita atualizada com sucesso',
+      });
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição updatePrescriptionByCode',
+      });
+    }
+  },
+
+  deletePrescriptionByCode: async (req, res, next) => {
+    // http://localhost:3000/receita/codigo/codigo
     try {
       let receita = await Receita.deleteOne({
-        cod_receita: req.params.codigo
-      })
+        cod_receita: req.params.codigo,
+      });
 
       res.status(200).send({
-        message: 'Receita deletada com sucesso'
-      })
+        message: 'Receita deletada com sucesso',
+      });
     } catch (e) {
       res.status(500).send({
-        message: 'Falha ao processar requisição deletePrescriptionByCode'
-      })
+        message: 'Falha ao processar requisição deletePrescriptionByCode',
+      });
     }
   },
-}
+};
 
 // try {
 //   await client.connect();
