@@ -1,69 +1,111 @@
-const { MongoClient } = require('mongodb');
-const { default: paciente } = require('../models/paciente');
+import mongoose from 'mongoose';
+import Paciente from '../models/paciente.js';
 
-try {
-  await client.connect();
-  await createMultipleListings(client, [
-    {
-      cpf: '313.313.545-91',
-      nome: 'Maria',
-      endereco: 'Rua Manoel Nobrega, 1341, apto. 43',
-      convenioMedico: 'Unimed',
-      idade: '61',
-    },
-    {
-      cpf: '313.313.545-92',
-      nome: 'Manuel',
-      endereco: 'Rua Manoel Nobrega, 1341, apto. 44',
-      convenioMedico: 'Notre Dame',
-      idade: '44',
-    },
-  ]);
-} catch (e) {
-  console.error(e);
-}
 
-// cria multiplos paciente
-async function createMultipleListings(client, newPaciente) {
-  const result = await client.db('test').collection('pacientes').insertMany(newPaciente);
+const pacienteControllers = {
+  // POST
+  post: async (req, res, next) => {
+    try {
+      let dados = req.body;
+      let paciente = new Paciente(dados);
+      
+      await paciente.save();
+      res.status(201).send({
+        message: 'paciente cadastrado com sucesso!',
+      });
+    } catch (e) {
+      console.error(e);
+      res.status(500).send({
+        message: 'Falha ao processar requisição',
+        data: e,
+      });
+    }
+  },
 
-  console.log(`${result.insertedCount} new listing(s) created with the following id(s):`);
-  console.log(result.insertedIds);
-}
+  // GET ALL - todos os pacientes da base
+  getAll: async (req, res, next) => {
+    async function findAllPacientes() {
+      const cursor = Paciente.find({});
 
-// retorna paciente conforme busca por seu CPF
-async function findOneByCPF(client, cpf) {
-  const result = await client.db('test').collection('pacientes').find({
-    cpf: cpf,
-  });
+      return cursor;
+    }
 
-  if (result) {
-    console.log(`Found a listing in the collection with the CPF code '${cpf}':`);
-    console.log(result);
-  } else {
-    console.log(`No listings found with the CPF code '${cpf}'`);
-  }
-}
+    try {
+      const data = await findAllPacientes();
+      res.status(200).send(data);
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição',
+      });
+    }
+  },
 
-// atualiza funcionario conforme seu CPF
-async function updatePatientInformations(client, cpf, newPatient) {
-  const result = await client.db('test').collection('pacientes').updateOne(
-    {
-      cpf: cpf,
-    },
-    { $set: newPatient }
-  );
+  // retorna o paciente buscado pelo seu cpf
+  getByCPF: async (req, res, next) => {
+    // retorna o paciente buscado pelo seu cpf
+    async function findByCpf(cpf) {
+      let paciente = await Paciente.findOne({'cpf': cpf});
 
-  if (result) {
-    console.log(`${result} updated.`);
-  } else {
-    console.error(`No patient with the cpf code ${cpf} found.`);
-  }
-}
+      return paciente;
+    }
 
-// deleta funcionario conforme seu cpf
-async function deletePatient(client, cpf) {
-  const result = await client.db('test').collection('pacientes').deleteOne({ cpf: cpf });
+    try {
+      const data = await findByCpf(req.params.cpf);
 
-  console.log(`${result} deleted`);
-}
+      res.status(200).send(data);
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição getByCPF',
+        erro: e
+      });
+    }
+  },
+
+  // atualizar um paciente pelo cpf
+  put: async (req, res, next) => {
+    // atualizar um paciente, encontrado pelo cpf
+    async function updatePatientByCpf(cpf) {
+      const result = await Paciente.updateOne(
+        {'cpf':cpf},
+        {$set: newPatient}
+      );
+      return reseult;
+    };
+
+    try {
+      let data = await updatePatientByCpf(req.body.cpf)
+      res.status(200).send({data: data, mensagem: "Sucesso ao atualizar o paciente"});
+
+    } catch (e) {
+      res.status(500).send({
+        message: 'Falha ao processar requisição updateAppointmentByTuple',
+      });
+    }
+  },
+
+  delete: async (req, res, next) => {
+    // excluir um paciente pelo cpf
+    async function deletePatienteByCpf(cpf) {
+      const result = await Paciente.deleteOne({'cpf':cpf});
+    }
+
+    try {
+      await deletePatienteByCpf(req.params.cpf);
+      res.status(200).send({
+        message: 'Paciente removida com sucesso!',
+      });
+    } catch (e) {
+      res.status(400).send({
+        message: 'Falha ao remover paciente',
+        data: e,
+      });
+    }
+  },
+
+
+
+};
+
+export default pacienteControllers;
+
+
