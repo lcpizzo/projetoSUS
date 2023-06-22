@@ -4,12 +4,12 @@ const codigoAgregadoModel = new mongoose.Schema({
   medico: {
     type: String,
     required: true,
-    ref: 'funcionario',
+    ref: 'Funcionario',
   },
   paciente: {
     type: String,
     required: true,
-    ref: 'funcionario',
+    ref: 'Funcionario',
   },
   dataConsulta: {
     type: Date,
@@ -26,7 +26,7 @@ const consultaSchema = new mongoose.Schema({
   },
   dadosReceita: {
     type: [String],
-    ref: 'receita',
+    ref: 'Receita',
   },
 });
 
