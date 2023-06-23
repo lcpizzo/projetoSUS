@@ -1,9 +1,10 @@
 {
-    "request": "replace",
+    "request": "get",
+    "collection": "medicamentos",
     "filters": {
-        "nome": "rivotril"
+        "preco":{"$gt": 200}
     },
-    "data": {    
-        
+    "data": {
+
     }
 }
