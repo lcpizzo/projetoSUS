@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const receituarioModel = new mongoose.Schema({
   medicamento: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'medicamento',
+    ref: 'Medicamento',
     required: true,
   },
   frequencia: {
@@ -32,12 +32,12 @@ const receitaSchema = new mongoose.Schema({
   },
   medico: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'funcionario',
+    ref: 'Funcionario',
     required: true,
   },
   paciente: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'paciente',
+    ref: 'Paciente',
     required: true,
   },
 });
