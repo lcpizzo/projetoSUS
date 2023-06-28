@@ -1,45 +1,45 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const postoSchema = new mongoose.Schema({
-    codigoPosto: {
-        type: String,
-        required: true,
-        index: true,
+  codigoPosto: {
+    type: String,
+    required: true,
+    index: true,
+  },
+  nome: {
+    type: String,
+    required: true,
+  },
+  endereco: {
+    type: String,
+    required: true,
+  },
+  CEP: {
+    type: String,
+    required: true,
+    //match: '/^([\d]{2})\.?([\d]{3})-?([\d]{3})/',
+  },
+  estoque: {
+    type: {
+      medicamento: {
+        type: mongoose.Schema.Types.ObjectID,
+        ref: 'Medicamento',
+      },
+      quantidadeEstoque: {
+        type: Number,
+      },
+      precoAtual: {
+        type: Number,
+      },
     },
-    nome: {
-        type: String,
-        required: true,
-    },
-    endereco: {
-        type: String,
-        required: true,
-    },
-    CEP: {
-        type: String,
-        required: true,
-        //match: '/^([\d]{2})\.?([\d]{3})-?([\d]{3})/',
-    },
-    estoque: {
-        type: {
-            medicamento: {
-                type: mongoose.Schema.Types.ObjectID,
-                ref: 'Medicamento',
-            },
-            quantidadeEstoque: {
-                type: Number,
-            },
-            precoAtual: {
-                type: Number,
-            }        
-        }
-    },
-    funcionarios: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Funcionario'
-    }
+  },
+  funcionarios: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Funcionario',
+    required: true,
+  },
+});
 
-})
-
-const posto = mongoose.model("Posto", postoSchema);
+const posto = mongoose.model('Posto', postoSchema);
 
 export default posto;

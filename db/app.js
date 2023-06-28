@@ -1,5 +1,17 @@
 import db from './dbConnect.js';
 import express from 'express';
+import AdminJS from 'adminjs';
+import AdminJSExpress from '@adminjs/express';
+import * as AdminJSMongoose from '@adminjs/mongoose';
+import { locales as AdminJSLocales } from 'adminjs';
+
+import Consulta from './models/consulta.js';
+import Funcionario from './models/funcionario.js';
+import Medicamento from './models/medicamento.js';
+import Paciente from './models/paciente.js';
+import Pedido from './models/pedido.js';
+import Posto from './models/posto.js';
+import Receita from './models/receita.js';
 
 const app = express();
 
@@ -16,19 +28,6 @@ app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
 
-import AdminJS from 'adminjs';
-import AdminJSExpress from '@adminjs/express';
-import mongoose from 'mongoose';
-import * as AdminJSMongoose from '@adminjs/mongoose';
-
-import Consulta from './models/consulta.js';
-import Funcionario from './models/funcionario.js';
-import Medicamento from './models/medicamento.js';
-import Paciente from './models/paciente.js';
-import Pedido from './models/pedido.js';
-import Posto from './models/posto.js';
-import Receita from './models/receita.js';
-
 AdminJS.registerAdapter({
   Resource: AdminJSMongoose.Resource,
   Database: AdminJSMongoose.Database,
@@ -36,11 +35,16 @@ AdminJS.registerAdapter({
 
 const PORT = 3001;
 
+// ADMINJS
 const start = async () => {
   const app = express();
 
   const adminOptions = {
     resources: [Consulta, Receita, Medicamento, Funcionario, Paciente, Pedido, Posto],
+    locale: {
+      language: 'pt-BR',
+      availableLanguages: Object.keys(AdminJSLocales),
+    },
   };
 
   const admin = new AdminJS(adminOptions);
