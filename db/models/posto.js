@@ -17,7 +17,6 @@ const postoSchema = new mongoose.Schema({
   CEP: {
     type: String,
     required: true,
-    //match: '/^([\d]{2})\.?([\d]{3})-?([\d]{3})/',
   },
   estoque: {
     type: {

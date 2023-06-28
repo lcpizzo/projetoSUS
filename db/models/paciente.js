@@ -6,7 +6,6 @@ const pacienteSchema = new mongoose.Schema({
     required: true,
     trim: true,
     unique: true,
-    //match: '/([0-9]{3}.?[0-9]{3}.?[0-9]{3}.?-?[0-9]{2})/',
   },
   nome: {
     type: String,

@@ -6,7 +6,6 @@ const funcionarioSchema = new mongoose.Schema({
     required: true,
     trim: true,
     unique: true,
-    // montar uma regex para validar as entradas
   },
   nome: {
     type: String,
@@ -21,11 +20,9 @@ const funcionarioSchema = new mongoose.Schema({
   cpf: {
     type: String,
     required: true,
-    //match:'/([0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\.?-?[0-9]{2})/',
   },
   uf: {
     type: String,
-    //match: '/[A-Z]{2}/',
   },
 });
 
