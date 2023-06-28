@@ -12,6 +12,6 @@ with open("request_" + str(sys.argv[1]) + "_example.json") as arquivo:
 
 for j in range(1):
     print(data)
-    producer.send('App', value=data)
+    producer.send('topic_App', value=data)
     print("dado enviado")
     sleep(0.3)
