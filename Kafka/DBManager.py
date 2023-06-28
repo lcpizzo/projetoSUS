@@ -13,7 +13,7 @@ producer = KafkaProducer(
 )
 
 consumer = KafkaConsumer(
-    'topic_test',
+    'App',
     bootstrap_servers=['localhost:9092'],
     auto_offset_reset='earliest',
     enable_auto_commit=True,
@@ -36,7 +36,7 @@ for event in consumer:
         if response_list:
             # print(response_list)
             response = {"code": 0, "values": response_list}
-            producer.send('topic_test',json_util.dumps(response))
+            producer.send('DB',json_util.dumps(response))
             continue
         else:
             response = {"code":1 ,"error_message": "no value found"}
@@ -70,4 +70,4 @@ for event in consumer:
         except Exception as e:
             print(e)
             response = {"code":1 ,"error_message": str(e)}
-    producer.send('topic_test', value=response)
+    producer.send('DB', value=response)
