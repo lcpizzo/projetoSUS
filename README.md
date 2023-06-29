@@ -9,7 +9,7 @@ O grupo decidiu por usar o banco de dados MongoDB, com Javascript para realizar 
 
 ## Instalação
 ### Kafka
-Garantir que o docker esteja instalado na sua máquina
+Garantir que o docker esteja instalado na sua máquina //
 ``sudo apt install docker``
 Garantir que o python esteja instalado na sua máquina
 ``sudo apt install python``
