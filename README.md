@@ -20,7 +20,10 @@ sudo apt install python
 ``` 
 <br>
 Instalar os pacotes para python <br>
-```pip install kafka-python bson json pymongo```<br>
+```shell
+pip install kafka-python bson json pymongo
+```
+<br>
 
 ## Uso
 ### Kafka
