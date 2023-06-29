@@ -19,19 +19,19 @@ Instalar os pacotes para python
 ## Uso
 ### Kafka
 Um vídeo exemplo do uso está disponível no [link](https://drive.google.com/file/d/1v77TMqDas3fzIasBEZiqD9CtRhCmVRQC/view?usp=sharing) abaixo:
-<https://drive.google.com/file/d/1v77TMqDas3fzIasBEZiqD9CtRhCmVRQC/view?usp=sharing>
+<https://drive.google.com/file/d/1v77TMqDas3fzIasBEZiqD9CtRhCmVRQC/view?usp=sharing> \\
 Executar o terminal na pasta projetoSUS/Kafka e rodar o seguinte comando
-``docker-compose up``
+``docker-compose up`` \\
 Isso abrirá o ambiente docker, se você desejar rodar em segundo plano adicione a flag -d ao final do comando \\
-
+\\
 Em um terminal separado, ainda no mesmo diretório execute o DBManager com o comando:
-``python3 DBManager.py``
+``python3 DBManager.py`` \\
 Isso irá deixar o consumidor do DBManager ouvindo as requisições \\
 Agora para ver as respostar precisamos configurar o consumidor da aplicação em um novo terminal, para isso execute o comando:
-``python3 consumer.py``
+``python3 consumer.py`` \\
 
 Por fim vamos simular as requisições com o producer, para isso vamos executar o producer.py com o tipo de requisição de exemplo que queremos executar:
-``python3 producer.py <requisições>``
+``python3 producer.py <requisições>`` \\
 Lembrando que os comandos implementados são:
 *put: adicona "Rivotril" à lista de medicamentos
 *get: busca itens com  o nome "Rivotril" na lista de medicamentos
