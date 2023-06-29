@@ -15,9 +15,9 @@ sudo apt install docker
 ```
 <br>
 Garantir que o python esteja instalado na sua máquina <br>
-```shell
+```console
 sudo apt install python
-``` 
+```
 <br>
 Instalar os pacotes para python <br>
 ```shell
