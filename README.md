@@ -58,10 +58,10 @@ Por fim vamos simular as requisições com o producer, para isso vamos executar 
  ``` 
  <br>
 Lembrando que os comandos implementados são: <br>
-*put: adicona "Rivotril" à lista de medicamentos 
-*get: busca itens com  o nome "Rivotril" na lista de medicamentos
-*update: aumenta o preço de um médicamento com o nome "Rivotril" em 20%
-*delete deleta um medicamento com o nome "Rivotril"
+* put: adicona "Rivotril" à lista de medicamentos 
+* get: busca itens com  o nome "Rivotril" na lista de medicamentos
+* update: aumenta o preço de um médicamento com o nome "Rivotril" em 20%
+* delete deleta um medicamento com o nome "Rivotril"
 
 Com a execução feita de forma correta você poderá ver: <br>
 1. A requisição que foi enviada pelo producer
