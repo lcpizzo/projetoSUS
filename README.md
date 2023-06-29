@@ -31,18 +31,18 @@ pip install kafka-python bson json pymongo
 ## Uso
 ### Kafka
 Um vídeo exemplo do uso está disponível no [link](https://drive.google.com/file/d/1v77TMqDas3fzIasBEZiqD9CtRhCmVRQC/view?usp=sharing) abaixo: <br><https://drive.google.com/file/d/1v77TMqDas3fzIasBEZiqD9CtRhCmVRQC/view?usp=sharing>  <br>
-Executar o terminal na pasta projetoSUS/Kafka e rodar o seguinte comando <br>
+Executar o terminal na pasta projetoSUS/Kafka e rodar o seguinte comando
 ```shell
 docker-compose up
 ```  
-<br>
-Isso abrirá o ambiente docker, se você desejar rodar em segundo plano adicione a flag -d ao final do comando <br>
 
-Em um terminal separado, ainda no mesmo diretório execute o DBManager com o comando: <br> <br>
+Isso abrirá o ambiente docker, se você desejar rodar em segundo plano adicione a flag -d ao final do comando <br> <br>
+
+Em um terminal separado, ainda no mesmo diretório execute o DBManager com o comando:
 ```shell
 python3 DBManager.py
 ``` 
-<br>
+
 Isso irá deixar o consumidor do DBManager ouvindo as requisições <br>
 Agora para ver as respostar precisamos configurar o consumidor da aplicação em um novo terminal, para isso execute o comando: <br>
 
