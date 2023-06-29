@@ -5,13 +5,14 @@ from time import sleep
 from json import dumps
 from bson import json_util
 import pymongo
-import pandas as pd
 
+# conexão do Producer com o endereço do kafka na porta especificada no docker-compose.yml
 producer = KafkaProducer(
     bootstrap_servers=['localhost:9092'],
     value_serializer=lambda x: dumps(x).encode('utf-8')
 )
 
+# conexão do Cosnumidor com o endereço do kafka e ler do tópico da aplicação
 consumer = KafkaConsumer(
     'topic_App',
     bootstrap_servers=['localhost:9092'],
@@ -20,22 +21,29 @@ consumer = KafkaConsumer(
     group_id='my-group-id',
     value_deserializer=lambda x: loads(x.decode('utf-8'))
 )
+#conexão com a base da dados mongo
 client = pymongo.MongoClient("mongodb+srv://leonardopizzo:sistemasDistribuidos@cluster0.i1gvnkn.mongodb.net/?retryWrites=true&w=majority")
+
+#especificação da base de dados
 db = client['test']
 response_list = []
 for event in consumer:
     data = event.value
     print(data)
+    #teste para ver se o dado lido está formatado
     try:
         collection = db[data['collection']]
     except:
         continue
+    #definição de rotas e gerenciamento das respostas
+    #métodos definidos: get, post, put, replace, delete e update
     if data['request'] == 'get':
         print(data['filters'])
         response_list = list(collection.find(data['filters']))
         if response_list:
             print(response_list)
             response = {"code": 0, "values": response_list}
+            #envio da lista de dados do get para o topico da base de dados
             producer.send('topic_DB',json_util.dumps(response))
             continue
         else:
@@ -81,5 +89,5 @@ for event in consumer:
         print("comando não encontrado")
         continue
     print(response)
+    #envio de respostas padrões
     producer.send('topic_DB', value=response)
-    sleep(0.1)
