@@ -9,20 +9,20 @@
 
 ## Instalação
 ### Kafka
-| Garantir que o docker esteja instalado na sua máquina
-| ``sudo apt install docker``
-| Garantir que o python esteja instalado na sua máquina
-| ``sudo apt install python``
-| Instalar os pacotes para python
-| ``pip install kafka-python bson json pymongo``
+  Garantir que o docker esteja instalado na sua máquina
+  ``sudo apt install docker``
+  Garantir que o python esteja instalado na sua máquina
+  ``sudo apt install python``
+  Instalar os pacotes para python
+  ``pip install kafka-python bson json pymongo``
 
 ## Uso
 ### Kafka
-| Um vídeo exemplo do uso está disponível no [link](https://drive.google.com/file/d/1v77TMqDas3fzIasBEZiqD9CtRhCmVRQC/view?usp=sharing) abaixo:
-| <https://drive.google.com/file/d/1v77TMqDas3fzIasBEZiqD9CtRhCmVRQC/view?usp=sharing> 
-|| Executar o terminal na pasta projetoSUS/Kafka e rodar o seguinte comando
-| ``docker-compose up`` 
-| Isso abrirá o ambiente docker, se você desejar rodar em segundo plano adicione a flag -d ao final do comando 
+  Um vídeo exemplo do uso está disponível no [link](https://drive.google.com/file/d/1v77TMqDas3fzIasBEZiqD9CtRhCmVRQC/view?usp=sharing) abaixo:
+  <https://drive.google.com/file/d/1v77TMqDas3fzIasBEZiqD9CtRhCmVRQC/view?usp=sharing> 
+     Executar o terminal na pasta projetoSUS/Kafka e rodar o seguinte comando
+  ``docker-compose up`` 
+  Isso abrirá o ambiente docker, se você desejar rodar em segundo plano adicione a flag -d ao final do comando 
 
 || Em um terminal separado, ainda no mesmo diretório execute o DBManager com o comando:
 | ``python3 DBManager.py`` 
