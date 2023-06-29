@@ -10,15 +10,22 @@ O grupo decidiu por usar o banco de dados MongoDB, com Javascript para realizar 
 ## Instalação
 ### Kafka
 Garantir que o docker esteja instalado na sua máquina <br>
-```shell
+```shell 
 sudo apt install docker
 ```
 <br>
 Garantir que o python esteja instalado na sua máquina <br>
-```sudo apt install python```
+
+```shell
+sudo apt install python
+``` 
+
 <br>
 Instalar os pacotes para python <br>
-```pip install kafka-python bson json pymongo```
+
+```shell
+pip install kafka-python bson json pymongo
+```
 <br>
 
 ## Uso
@@ -38,11 +45,17 @@ python3 DBManager.py
 <br>
 Isso irá deixar o consumidor do DBManager ouvindo as requisições <br>
 Agora para ver as respostar precisamos configurar o consumidor da aplicação em um novo terminal, para isso execute o comando: <br>
-```python3 consumer.py``` 
+
+```shell
+python3 consumer.py
+``` 
 <br>
 <br>
 Por fim vamos simular as requisições com o producer, para isso vamos executar o producer.py com o tipo de requisição de exemplo que queremos executar: <br>
- ```python3 producer.py <requisições> ``` 
+
+ ```shell
+ python3 producer.py <requisições>
+ ``` 
  <br>
 Lembrando que os comandos implementados são: <br>
 *put: adicona "Rivotril" à lista de medicamentos 
